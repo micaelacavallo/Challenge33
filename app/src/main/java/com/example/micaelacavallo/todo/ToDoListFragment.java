@@ -1,6 +1,8 @@
 package com.example.micaelacavallo.todo;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -9,11 +11,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class ToDoListFragment extends ListFragment {
+
+    public static Integer REQUEST_CODE = 0;
+    public TaskAdapter mAdapter;
 
     public ToDoListFragment() {
     }
@@ -29,6 +39,18 @@ public class ToDoListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        prepareListView();
+    }
+
+    private void prepareListView() {
+        List<Task> tasks = new ArrayList<>();
+        mAdapter = new TaskAdapter(getActivity(), tasks);
+        setListAdapter(mAdapter);
     }
 
     @Override
@@ -49,6 +71,7 @@ public class ToDoListFragment extends ListFragment {
         {
             case R.id.action_add:
                 handled=true;
+                launchCreateTask();
                 break;
         }
         if (!handled) {
@@ -56,5 +79,23 @@ public class ToDoListFragment extends ListFragment {
         }
 
         return handled;
+    }
+
+    private void launchCreateTask() {
+        Intent intent = new Intent (getActivity(), CreateTaskActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE)
+        {
+            if (resultCode == getActivity().RESULT_OK)
+            {
+                mAdapter.add(new Task(data.getStringExtra(Intent.EXTRA_TEXT)));
+            }
+
+        }
     }
 }
