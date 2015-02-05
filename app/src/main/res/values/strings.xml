@@ -7,5 +7,8 @@
     <string name="action_add">Add task</string>
     <string name="text_view_no_add_yet">You haven’t added anything yet.</string>
     <string name="check_box_done">Done</string>
+    <string name="title_activity_create_task">Create task</string>
+    <string name="button_done">Done</string>
+    <string name="edit_text_title_hint">Title</string>
 
 </resources>
